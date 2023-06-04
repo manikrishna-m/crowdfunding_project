@@ -18,16 +18,14 @@ try:
     preprocessor = ColumnTransformer(
         transformers=[
             ('numeric', SimpleImputer(strategy='median'), numeric_columns),
-            ('categorical', SimpleImputer(strategy='most_frequent'), categorical_columns)
+            ('categorical', Pipeline(steps=[
+                ('imputer', SimpleImputer(strategy='most_frequent')),
+                ('encoder', OneHotEncoder())
+            ]), categorical_columns)
         ])
 
-    pipeline = Pipeline(steps=[
-        ('preprocessor', preprocessor),
-        ('encoder', OneHotEncoder())
-    ])
-
-    transformed_data = pd.DataFrame(pipeline.fit_transform(data))
-    
+    transformed_data = pd.DataFrame(preprocessor.fit_transform(data))
+    transformed_data.to_csv('data/processed/output_data.csv', index=False)
     logging.info("Data transformation completed successfully.")
 except Exception as e:
     logging.exception("Data transformation failed.")
