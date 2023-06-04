@@ -11,8 +11,7 @@ class DataInjector:
     def inject_data(self):
         try:
             data = pd.read_csv(self.input_file)
-            data.to_csv(self.output_file, index=False)
-            
+            data.to_csv(self.output_file, index=False)         
             logging.info("Data injection completed successfully.")
         except Exception as e:
             
