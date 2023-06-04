@@ -1,7 +1,8 @@
 import pandas as pd
 import sys
-from utils.logger import logging
-from utils.exception import CustomException
+
+from src.exception import CustomException
+from src.logger import logging
 
 class DataInjector:
     def __init__(self, input_file, output_file):
