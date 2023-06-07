@@ -13,8 +13,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.svm import SVR
 
-from src.exception import CustomException
-
 def preprocess_data(file_path):
     try:
         logging.info("Reading data from CSV...")
@@ -35,17 +33,16 @@ def preprocess_data(file_path):
                     ('scaler', StandardScaler())
                 ]), categorical_columns)
             ])
-
         X = data.drop('math_score', axis=1)
         y = data['math_score']
-
+        
         logging.info("Splitting data into train and test sets...")
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
+       
         logging.info("Applying data transformation on train and test sets...")
-        X_train = preprocessor.fit_transform(X_train)
-        X_test = preprocessor.transform(X_test)
-
+        X_train = pd.DataFrame(preprocessor.fit_transform(X_train))
+        X_test = pd.DataFrame(preprocessor.transform(X_test))
+        
         X_train = np.c_[X_train, np.array(y_train)]
         X_test = np.c_[X_test, np.array(y_test)]
 
@@ -53,6 +50,7 @@ def preprocess_data(file_path):
             pickle.dump(preprocessor, f)
 
         logging.info("Data transformation completed successfully.")
+        print(X_train)
         return preprocessor, X_train, X_test, y_train, y_test
 
     except Exception as e:
